@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { ColorSlides } from "@/components/copper/color-slides";
 import { SiteFooter } from "@/components/copper/site-footer";
 import { SiteHeader } from "@/components/copper/site-header";
 import { Button } from "@/components/ui/button";
@@ -39,6 +38,14 @@ const LIFESTYLE: Record<string, { alt: string; caption: string }> = {
   },
 };
 
+const SWATCH: Record<string, string> = {
+  "Polished Copper": "bg-[#b87333]",
+  "Brushed Copper": "bg-[#b87333]",
+  "Patina Teal": "bg-[#4a8c82]",
+  "Night Sky": "bg-[#1c2333]",
+  "Desert Sand": "bg-[#efe3d0]",
+};
+
 function lifestyleFor(product: Product) {
   return product.lifestyle.map((src) => {
     const file = src.split("/").pop() ?? "";
@@ -74,11 +81,7 @@ export default function Home() {
                 Meet Copper: smart help for every Arizona home
               </h1>
               <p className="text-secondary-foreground text-xl">{TAGLINE}</p>
-              <Button
-                asChild
-                size="lg"
-                className="h-11 px-6 text-base shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:scale-105 hover:shadow-xl active:translate-y-0 active:scale-95"
-              >
+              <Button asChild size="lg" className="h-11 px-6 text-base">
                 <a href="#products">See products</a>
               </Button>
             </div>
@@ -94,7 +97,7 @@ export default function Home() {
                   height={1254}
                   priority
                   sizes="(min-width: 1152px) 288px, (min-width: 768px) 25vw, 45vw"
-                  className="h-auto w-full object-contain transition-transform duration-300 hover:-translate-y-2 hover:scale-105 motion-safe:animate-[float_6s_ease-in-out_infinite]"
+                  className="h-auto w-full object-contain"
                 />
               ))}
             </div>
@@ -113,16 +116,37 @@ export default function Home() {
                 key={product.id}
                 data-testid="product-card"
                 data-product={product.id}
-                className="bg-card text-card-foreground flex flex-col gap-4 rounded-2xl border p-6 transition-shadow duration-300 hover:shadow-xl"
+                className="bg-card text-card-foreground flex flex-col gap-4 rounded-2xl border p-6"
               >
-                <ColorSlides
-                  productName={product.name}
-                  src={product.cutout}
-                  alt={
-                    CUTOUT_ALT[product.id] ?? `${product.name} product photo`
-                  }
-                  colors={product.colors}
-                />
+                <div className="bg-secondary rounded-xl p-6">
+                  <Image
+                    src={product.cutout}
+                    alt={
+                      CUTOUT_ALT[product.id] ?? `${product.name} product photo`
+                    }
+                    width={1254}
+                    height={1254}
+                    sizes="(min-width: 768px) 40vw, 80vw"
+                    className="mx-auto h-auto w-full max-w-72 object-contain"
+                  />
+                </div>
+                <ul
+                  aria-label={`${product.name} colors`}
+                  className="flex flex-wrap gap-x-4 gap-y-1"
+                >
+                  {product.colors.map((color) => (
+                    <li
+                      key={color}
+                      className="text-muted-foreground flex items-center gap-1.5 text-sm"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={`size-3.5 rounded-full border ${SWATCH[color] ?? "bg-primary"}`}
+                      />
+                      {color}
+                    </li>
+                  ))}
+                </ul>
                 <div>
                   <h3 className="text-2xl font-bold">{product.name}</h3>
                   <p className="text-muted-foreground">{product.type}</p>
@@ -187,8 +211,8 @@ export default function Home() {
                   key={plan.id}
                   className={
                     isPlus
-                      ? "bg-primary text-primary-foreground flex flex-col gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                      : "bg-card text-card-foreground flex flex-col gap-4 rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                      ? "bg-primary text-primary-foreground flex flex-col gap-4 rounded-2xl p-6"
+                      : "bg-card text-card-foreground flex flex-col gap-4 rounded-2xl border p-6"
                   }
                 >
                   <h3 className="text-2xl font-bold">{plan.name}</h3>
